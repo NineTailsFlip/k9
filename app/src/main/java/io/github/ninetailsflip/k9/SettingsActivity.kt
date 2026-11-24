@@ -32,6 +32,7 @@ class SettingsActivity : NineSettingsActivity() {
                 startActivity(Intent(this@SettingsActivity, LanguagesActivity::class.java))
             }
             action("Added words") { startActivity(Intent(this@SettingsActivity, AddedWordsActivity::class.java)) }
+            action("Key characters") { startActivity(KeyCharsActivity.intentFor(this@SettingsActivity)) }
         }
         screen.section("Keys") {
             action("Hotkeys") { startActivity(Intent(this@SettingsActivity, HotkeysActivity::class.java)) }

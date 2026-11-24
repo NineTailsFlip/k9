@@ -59,6 +59,11 @@
 			android:name="io.github.ninetailsflip.k9.HotkeysActivity"
 			android:exported="false"
 			android:theme="@style/Theme.Nine" />
+		<activity
+			android:name="io.github.ninetailsflip.k9.KeyCharsActivity"
+			android:exported="false"
+			android:windowSoftInputMode="stateAlwaysHidden"
+			android:theme="@style/Theme.Nine" />
 
 		<activity
 			android:name="io.github.ninetailsflip.k9.LanguagesActivity"
