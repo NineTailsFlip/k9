@@ -40,7 +40,7 @@ class SettingsActivityTest {
     fun `K9's sections come first, then the Nine suite's own`() {
         val headers = rows(buildActivity()).map { it.text.toString() }.filter(::isSectionHeader)
         assertEquals(
-            listOf("KEYBOARD", "PREDICTIVE MODE (T9)", "ABC MODE", "TYPING", "MIND READING", "MORE", "UPDATES", "THEME", "BACKUP", "ABOUT"),
+            listOf("KEYBOARD", "KEYS", "PREDICTIVE MODE (T9)", "ABC MODE", "TYPING", "MIND READING", "COMPATIBILITY", "MORE", "UPDATES", "THEME", "BACKUP", "ABOUT"),
             headers,
         )
     }

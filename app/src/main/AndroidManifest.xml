@@ -50,6 +50,11 @@
 		</activity>
 
 		<activity
+			android:name="io.github.ninetailsflip.k9.HotkeysActivity"
+			android:exported="false"
+			android:theme="@style/Theme.Nine" />
+
+		<activity
 			android:name="io.github.ninetailsflip.k9.LanguagesActivity"
 			android:exported="false"
 			android:theme="@style/Theme.Nine" />
