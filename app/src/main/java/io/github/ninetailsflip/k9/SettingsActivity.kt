@@ -28,6 +28,9 @@ class SettingsActivity : NineSettingsActivity() {
             action("Default keyboard", value = ::defaultKeyboardLabel) {
                 getSystemService(InputMethodManager::class.java).showInputMethodPicker()
             }
+            action("Languages", value = ::languagesLabel) {
+                startActivity(Intent(this@SettingsActivity, LanguagesActivity::class.java))
+            }
         }
         screen.section("Predictive mode (T9)") {
             flag("Predictive mode", "pref_predictive_mode", true)
@@ -71,6 +74,11 @@ class SettingsActivity : NineSettingsActivity() {
         on = "on",
         off = "off",
     )
+
+    private fun languagesLabel(): String {
+        val ids = Engine.settings(this).enabledLanguageIds
+        return if (ids.size == 1) "1 on" else "${ids.size} on"
+    }
 
     private fun isEnabled(): Boolean =
         getSystemService(InputMethodManager::class.java).enabledInputMethodList.any { it.packageName == packageName }

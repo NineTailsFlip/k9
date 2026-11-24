@@ -49,6 +49,11 @@
 			</intent-filter>
 		</activity>
 
+		<activity
+			android:name="io.github.ninetailsflip.k9.LanguagesActivity"
+			android:exported="false"
+			android:theme="@style/Theme.Nine" />
+
 		<!-- Traditional T9's own settings, reached from K9's Settings until they're rebuilt on nine-core. -->
 		<activity
 			android:label="@string/app_name_short"
