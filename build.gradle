@@ -1,4 +1,8 @@
 // Top-level build file where you can add configuration options common to all sub-projects/modules.
+// K9 builds with the Nine suite's toolchain (AGP 8.5, Kotlin 1.9.24), the same as every Nine app:
+// nine-core's modules (:core, :update) come in as Gradle modules, and core/ pins Kotlin 1.9.24.
 plugins {
-	id 'com.android.application' version '9.5.1' apply false
+	id 'com.android.application' version '8.5.0' apply false
+	id 'com.android.library' version '8.5.0' apply false
+	id 'org.jetbrains.kotlin.android' version '1.9.24' apply false
 }

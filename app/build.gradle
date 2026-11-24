@@ -155,13 +155,14 @@ def getVersionString = { flavor -> return flavor == 'debug' ? getDebugVersion() 
 
 android {
 	namespace = PACKAGE_NAME
-	compileSdk = 37
+	compileSdk = 34
 
 	defaultConfig {
-		applicationId = PACKAGE_NAME
+		applicationId = APPLICATION_ID
 		buildFeatures.buildConfig = true
-		minSdk = 24
-		targetSdk = 37
+		// nine-core (the Nine suite's UI) needs Android 14, like every Nine app.
+		minSdk = 34
+		targetSdk = 34
 		versionCode = getVerCode()
 		versionName = getVerName()
 
@@ -254,9 +255,15 @@ android {
 }
 
 dependencies {
+	// nine-core: the Nine suite's UI (:core) and updates from GitHub Releases (:update).
+	implementation project(':core')
+	implementation project(':update')
+
 	implementation 'androidx.preference:preference:1.2.1'
 	implementation "androidx.window:window:1.5.1"
 	implementation "androidx.window:window-java:1.5.1"
-	implementation 'com.google.android.material:material:1.14.0'
+	// 1.12: the last Material that builds with the Nine toolchain (compileSdk 34, AGP 8.5).
+	implementation 'com.google.android.material:material:1.12.0'
 	premiumImplementation 'com.android.billingclient:billing:9.1.0'
 }
+

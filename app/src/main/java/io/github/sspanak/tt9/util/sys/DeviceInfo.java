@@ -22,9 +22,9 @@ public class DeviceInfo extends HardwareInfo {
 	public static final boolean AT_LEAST_ANDROID_12 = Build.VERSION.SDK_INT >= Build.VERSION_CODES.S;
 	public static final boolean AT_LEAST_ANDROID_13 = Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU;
 	public static final boolean AT_LEAST_ANDROID_14 = Build.VERSION.SDK_INT >= Build.VERSION_CODES.UPSIDE_DOWN_CAKE;
-	public static final boolean AT_LEAST_ANDROID_15 = Build.VERSION.SDK_INT >= Build.VERSION_CODES.VANILLA_ICE_CREAM;
-	public static final boolean AT_LEAST_ANDROID_16 = Build.VERSION.SDK_INT >= Build.VERSION_CODES.BAKLAVA;
-	public static final boolean AT_LEAST_ANDROID_17 = Build.VERSION.SDK_INT >= Build.VERSION_CODES.CINNAMON_BUN;
+	public static final boolean AT_LEAST_ANDROID_15 = Build.VERSION.SDK_INT >= 35; // VANILLA_ICE_CREAM: K9 compiles against API 34, like nine-core
+	public static final boolean AT_LEAST_ANDROID_16 = Build.VERSION.SDK_INT >= 36; // BAKLAVA
+	public static final boolean AT_LEAST_ANDROID_17 = Build.VERSION.SDK_INT >= 37; // CINNAMON_BUN
 
 
 	/**

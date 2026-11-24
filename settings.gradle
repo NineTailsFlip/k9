@@ -13,5 +13,12 @@ dependencyResolutionManagement {
 		}
 }
 
-rootProject.name = "tt9"
+rootProject.name = "k9"
 include ':app'
+
+// The Nine suite's core and NineTailsFlip's updater, from the nine-core submodule
+// (git clone --recursive, or git submodule update --init), as in every Nine app.
+include ':core'
+project(':core').projectDir = file('nine-core/core')
+include ':update'
+project(':update').projectDir = file('nine-core/update')
