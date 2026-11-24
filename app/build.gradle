@@ -1,5 +1,7 @@
 plugins {
 	id 'com.android.application'
+	// K9's own screens (io.github.ninetailsflip.k9) are Kotlin, like every Nine app; TT9's engine stays Java.
+	id 'org.jetbrains.kotlin.android'
 }
 
 apply from: 'constants.gradle'
@@ -193,6 +195,16 @@ android {
 		sourceCompatibility JavaVersion.VERSION_17
 		targetCompatibility JavaVersion.VERSION_17
 	}
+	kotlinOptions {
+		jvmTarget = '17'
+	}
+	testOptions {
+		unitTests.includeAndroidResources = true
+		unitTests.all {
+			// Robolectric's own documented requirement on JDK 17+, as in nine-core and every Nine app.
+			jvmArgs '--add-opens=java.base/java.lang=ALL-UNNAMED', '--add-opens=java.base/java.util=ALL-UNNAMED', '--add-opens=java.base/java.io=ALL-UNNAMED'
+		}
+	}
 
 	flavorDimensions = ['app']
 	productFlavors {
@@ -258,6 +270,8 @@ dependencies {
 	// nine-core: the Nine suite's UI (:core) and updates from GitHub Releases (:update).
 	implementation project(':core')
 	implementation project(':update')
+	testImplementation 'junit:junit:4.13.2'
+	testImplementation 'org.robolectric:robolectric:4.13'
 
 	implementation 'androidx.preference:preference:1.2.1'
 	implementation "androidx.window:window:1.5.1"
