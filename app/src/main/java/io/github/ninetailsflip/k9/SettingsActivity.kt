@@ -31,6 +31,7 @@ class SettingsActivity : NineSettingsActivity() {
             action("Languages", value = ::languagesLabel) {
                 startActivity(Intent(this@SettingsActivity, LanguagesActivity::class.java))
             }
+            action("Added words") { startActivity(Intent(this@SettingsActivity, AddedWordsActivity::class.java)) }
         }
         screen.section("Keys") {
             action("Hotkeys") { startActivity(Intent(this@SettingsActivity, HotkeysActivity::class.java)) }
