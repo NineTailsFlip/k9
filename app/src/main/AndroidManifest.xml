@@ -37,6 +37,14 @@
 			android:exported="false"
 			android:multiprocess="false" />
 
+		<!-- K9: its layouts (languages) for the phone's own setup and Settings to list and choose.
+			 Anyone may read the list; only a system app with WRITE_SECURE_SETTINGS may change it. -->
+		<provider
+			android:name="io.github.ninetailsflip.k9.LanguagesProvider"
+			android:authorities="io.github.ninetailsflip.k9.languages"
+			android:exported="true"
+			android:writePermission="android.permission.WRITE_SECURE_SETTINGS" />
+
 		<!-- K9: Settings in the Nine suite's look, and the launcher entry. -->
 		<activity
 			android:label="@string/app_name"
