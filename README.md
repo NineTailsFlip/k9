@@ -1,106 +1,92 @@
-# Traditional T9 ![GitHub Downloads (latest release)](https://img.shields.io/github/downloads/sspanak/tt9/latest/total)
+# K9 — Keyboard on 9 keys
 
-TT9 is a Nokia-style T9 keyboard for Android. It provides predictive text input in [50+ languages](app/languages/definitions), configurable hotkeys, clipboard, undo/redo, and extensive customization. It works on touchscreens, physical keypads, and TV remote controls. And best of all, it [doesn't spy](docs/privacy.md) on you!
+A T9 keyboard for Android phones with a keypad, with its settings in the Nine look.
 
-This is a modernized version of the [original project](https://github.com/Clam-/TraditionalT9) by Clam-.
+[![Build](https://github.com/NineTailsFlip/k9/actions/workflows/build.yml/badge.svg)](https://github.com/NineTailsFlip/k9/actions/workflows/build.yml)
+[![Release](https://img.shields.io/github/v/release/NineTailsFlip/k9)](https://github.com/NineTailsFlip/k9/releases/latest)
+[![License](https://img.shields.io/badge/license-Apache--2.0%20%2B%20GPL--3.0-blue)](#license)
 
-## 📷 Screenshots
-<table>
-    <tr>
-        <td> <img src="screenshots/1.png"> </td>
-        <td rowspan="2"> <img src="screenshots/3.png"> </td>
-        <td rowspan="2"> <img src="screenshots/4.png"> </td>
-        <td rowspan="2"> <img src="screenshots/7.png"> </td>
-        <td rowspan="2"> <img src="screenshots/5.png"> </td>
-    </tr>
-    <tr>
-        <td> <img src="screenshots/2.png"> </td>
-    </tr>
-</table>
+K9 is [NineTailsFlip](https://github.com/NineTailsFlip)'s fork of
+[Traditional T9](https://github.com/sspanak/tt9) (TT9) by [sspanak](https://github.com/sspanak) and contributors.
+Typing works as in TT9; every settings screen is rebuilt on
+[nine-core](https://github.com/NineTailsFlip/nine-core), so K9 looks and handles like the other
+Nine apps: one column of text on black, the D-pad, a numbered `*` menu, a hint bar.
 
-## 📦 Install
+## Features
 
-[<img src="docs/badges/google.png" alt="Download from Play Store" height="59">](https://play.google.com/store/apps/details?id=io.github.sspanak.tt9)&nbsp;&nbsp;&nbsp;&nbsp;
-![](docs/badges/80-height.png)[<img src="docs/badges/f-droid.png" alt="Download from F-Droid" height="59">](https://f-droid.org/app/io.github.sspanak.tt9)&nbsp;&nbsp;&nbsp;&nbsp;
-![](docs/badges/80-height.png)[<img src="https://stc.utdstc.com/img/mediakit/download-gio-big.png" alt="Download from Uptodown" height="59">](https://io-github-sspanak-tt9.en.uptodown.com/android)&nbsp;&nbsp;&nbsp;&nbsp;
-![](docs/badges/80-height.png)[<img src="docs/badges/github.png" alt="Download from GitHub" height="59">](https://github.com/sspanak/tt9/releases/latest)
-![](docs/badges/80-height.png)
+From TT9:
+- Predictive (T9), ABC and 123 input in 50+ languages, with dictionaries and words you add.
+- Configurable hotkeys, clipboard, undo/redo, an optional on-screen keypad.
+- It [doesn't spy](docs/privacy.md) on you.
 
-_If your phone does not have Google Play and does not allow installing custom APKs, please consult the [Installation Guide](docs/installation.md)._
+Ours:
+- **Settings in the Nine look:** keyboard, keys, predictive and ABC modes, typing, mind reading,
+  compatibility, the on-screen keypad, diagnostics, help.
+- **Nine screens** for languages and their dictionaries, hotkeys, the characters on each key,
+  added words, the manual and privacy policy, logs, and a "try typing" page.
+- **Layouts for the system:** `LanguagesProvider` lets the phone's own Setup and Settings list
+  K9's layouts and choose which are on — any number of them.
+- **Updates from GitHub Releases**, and the look chosen in the phone's first-time setup.
 
-## ⚙️ System Requirements
-- Full version: Android 7.0 or higher
-- Lite version: Android 8.0 or higher
-- Storage space depends on the Android version. The lite version requires at least 6-8 Mb and the full version requires at least 265 Mb.
-- Extra storage space is necessary for language dictionaries in Predictive Mode.
-    - Languages with character predictions only (Korean): ~1 Mb per language
-    - Tiny languages (< 100k words; Kiswahili, Indonesian, Vietnamese): 5-6 Mb per language.
-    - Small languages (100k-400k words; e.g. English, Norwegian, Swedish, Finnish, French): 15-30 Mb per language.
-    - Medium languages (400k-800k words; e.g. Chinese, Danish, Greek, Italian, Portuguese): 40-75 Mb per language
-    - Large languages (800k-1.6M words; e.g. Arabic, Bulgarian, Hebrew, Japanese, Romanian, Spanish): 100-170 Mb per language
+## Installation
 
-_Storage usage for the dictionaries depends on the word root count and the average word length in each language. Some languages will require more space, even if they have fewer words than others._
+Download `k9-<version>.apk` from [Releases](https://github.com/NineTailsFlip/k9/releases/latest)
+and install it, then turn it on: Settings → System → Keyboard. On the
+[thor2 image](https://github.com/kloploid/android_vendor_thor2) it comes preinstalled and is the
+keyboard in use from the first screen.
 
-### ⚠️ Compatibility
+Releases are TT9's `lite` flavor: dictionaries are downloaded the first time a language is used.
+The package is `io.github.ninetailsflip.k9`, so K9 installs next to TT9.
 
-#### 1. Check your Android version
-- Android 8.0+ → Install latest version (Play Store, F-Droid, or GitHub)
-- Android 7.x → Install latest full version from GitHub (manual)
-- Android 5–6 → Install full v60.0
-- Android 4.4 → Install full v44.0
-- Android ≤4.3 → Install legacy Traditional T9 Keypad IME from 2016
+## Usage
 
-_On devices without Internet access, always use the full version from GitHub._
+Type with the number keys; the hotkeys (mode, language, backspace, and more) are set in
+Settings → Keys → Hotkeys. The user manual is in the app (Settings → Help) and in
+[docs/help](docs/help) in several languages.
 
-#### 2. If your device is unusual
-On heavily customized phones (e.g. TCL Flip 2, Kyocera phones, especially if running Android 10+), you may experience issues:
-  - empty gaps/misaligned items on the screen
-  - unexpected text/numbers appearing when you try to type
-  - incomplete integration with the native apps (e.g. "send" button not working, missing hotkey functions, etc.)
+## Building
 
-#### 3. Want guaranteed compatibility?
-Use one of the tested phones:
-- Motorola g05 (Android 15)
-- CAT S22 Flip (Android 11)
-- Unihertz Atom L (Android 11)
-- Qin F21 Pro+ (Android 11)
-- Energizer H620SEU (Android 10)
-- Sonim XP3800 (Android 8.1)
+Requirements: JDK 17+, Android SDK (platform 34).
 
-## 🤔 How to Use Traditional T9?
-Before using Traditional T9 for the first time you need to configure it and load a dictionary. After that, you can start typing right away in one of the three modes: Predictive, ABC, or Numeric (123). And even if you have mastered the keypad back in the day, you will still find the Predictive mode now offers more powerful and smart new ways of typing with even fewer key presses.
+```bash
+git clone --recursive https://github.com/NineTailsFlip/k9.git
+cd k9
+./gradlew :app:assembleLiteDebug
+```
 
-So make sure to read the initial setup and the hotkey tips in the [user manual](docs/help/help.en.md). Also, don't miss the convenient [compatibility options](docs/help/help.en.md#troubleshooting) aimed to improve the experience in some applications.
+Tests: `./gradlew :app:testLiteDebugUnitTest`.
 
-_The user manual is also available in: [Brazilian Portuguese](docs/help/help.pt.md), [German](docs/help/help.de.md), [French](docs/help/help.fr.md), [Italian](docs/help/help.it.md), [Russian](docs/help/help.ru.md), [Spanish](docs/help/help.es.md), [Turkish](docs/help/help.tr.md), [Ukrainian](docs/help/help.uk.md)._
+The version comes from git: `versionCode` is the number of commits, `versionName` is
+`<number of v-tags>.<commits since the last tag>`. A release is a tag `v<next>.0` (one more than
+the current tags), then — because workflows don't run on their own in a fork —
+`gh workflow run Build --ref v<next>.0`. Signing needs `app/keystore.properties` (git-ignored),
+which CI writes from secrets.
 
-## ⌨ Contributing
-As with many other open-source projects, this one is also maintained by its author in his free time. Any help in making Traditional T9 better will be highly appreciated. Here is how:
-- Add [a new language](CONTRIBUTING.md#adding-a-new-language), [new UI translations](CONTRIBUTING.md#translating-the-ui) or simply fix a spelling mistake. The process is very simple and even with minimum technical knowledge, your skills as a native speaker will be of great use. Or, if you are not tech-savvy, just [open a new issue](https://github.com/sspanak/tt9/issues) and put the correct translations or words there. Correcting misspelled words or adding new ones is the best you can do to help. Processing millions of words in multiple languages is a very difficult task for a single person.
-- Share your list of added words. Use the Export function in Settings → Languages → Added Words and upload the generated CSV file in a [new issue](https://github.com/sspanak/tt9/issues). You are also welcome to [open a PR](https://github.com/sspanak/tt9/pulls) if you have good technical knowledge and can split them by language.
-- [Report bugs](https://github.com/sspanak/tt9/issues) or other unusual behavior on different phones. It is only possible to verify correct operation and compatibility on a handful of phones, but Android behavior and appearance vary a lot across the millions of devices available out there.
-- Experienced developers, who are willing to get your hands dirty with the code, see the [Contribution Guide](CONTRIBUTING.md).
+## Project structure
 
-Your PRs are welcome!
+| Path | What's there |
+|---|---|
+| `app/src/main/java/io/github/sspanak/tt9/` | TT9: the input method, languages, dictionaries |
+| `app/src/main/java/io/github/ninetailsflip/k9/` | Ours: the Nine settings screens, `K9Screens`, `LanguagesProvider`, `K9Application` |
+| `app/languages/` | Language definitions and dictionaries (TT9) |
+| `nine-core/` | Git submodule: [nine-core](https://github.com/NineTailsFlip/nine-core) |
+| `docs/` | TT9's manual, privacy policy and installation guide |
 
-## 👍 Support
-The best way to support the project is to give it five stars on Google Play. While it may sound trivial, good reviews really motivate me to keep working on it. They also encourage the Play Store to promote TT9 to more people and ultimately help spread the word.
+## Staying in sync with upstream
 
-You can also give the project a star on GitHub. Higher-ranked projects can access development tools for free and apply for funding more easily.
+K9 holds TT9's full history with our changes on top. Most of ours live in
+`io.github.ninetailsflip.k9`; a few touch TT9's own code (opening the settings screens). Merge
+upstream releases with `git pull https://github.com/sspanak/tt9 master` and resolve those spots.
 
-And if you truly enjoy using TT9, buy me a beer on [Ko-Fi](https://ko-fi.com/sspanak) or buy Premium on Google Play.
+## Contributing
 
-## 💪 Philosophy
-- No spying, tracking, telemetry, reports, or data collection of any sort.
-- No ads or unnecessary bells and whistles. It only does its job, typing.
-- No unnecessary network connections. The Full version operates entirely offline, and the Lite version connects only to download dictionaries from GitHub. Voice Input may require Internet access, depending on the available voice services.
-- Open-source, permitting you to verify all the above yourself.
-- Created with help from the entire community.
-- Things it will (probably) never have: QWERTY layout, swipe-typing, GIFs, and stickers.
-- Not intended as a clone of TouchPal, Sony Ericsson, KaiOS, Samsung, etc. While it captures the feel of the classics, TT9 offers its own experience and won’t replicate any device or app exactly.
+Issues and pull requests are welcome; see
+[CONTRIBUTING](https://github.com/NineTailsFlip/.github/blob/main/CONTRIBUTING.md). Typing and
+dictionary problems that also happen in TT9 belong upstream:
+<https://github.com/sspanak/tt9/issues>.
 
-_Note: the Google Play version is almost identical to the lite version, except that it includes extra "premium" features that are closed-source. Nevertheless, none of the extra components compromises the principles outlined above._
+## License
 
-## 🕮 License
-- The source code, the logo image, and the icons are licensed under the conditions described in [LICENSE.txt](LICENSE.txt).
-- The dictionaries are licensed under the licenses provided in the [respective readme files](docs/dictionaries), where applicable. Detailed information about the dictionaries is also available there.
+TT9's code is under the Apache License 2.0 — see [LICENSE.txt](LICENSE.txt). K9 builds include
+[nine-core](https://github.com/NineTailsFlip/nine-core), which is GPL-3.0, so the K9 app as a
+whole is distributed under GPL-3.0-or-later.
