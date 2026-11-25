@@ -155,6 +155,22 @@ def getVerName = { -> return getVersionName() }
 def getVersionString = { flavor -> return flavor == 'debug' ? getDebugVersion() : getReleaseVersion() }
 
 
+// K9's release signing: CI writes keystore.properties for a tagged release (NineTailsFlip's
+// release key, the same for every Nine app); without it a release build is signed with the debug key.
+def keystorePropertiesFile = file("keystore.properties")
+def keystoreProperties = new Properties()
+if (keystorePropertiesFile.exists()) {
+	keystorePropertiesFile.withInputStream { keystoreProperties.load(it) }
+}
+
+// What a release built from here is: CI checks the tag against it and writes update.json from it.
+tasks.register('printVersion') {
+	doLast {
+		println "versionCode=${getVerCode()}"
+		println "versionName=${getVerName()}"
+	}
+}
+
 android {
 	namespace = PACKAGE_NAME
 	compileSdk = 34
@@ -177,6 +193,17 @@ android {
 		vectorDrawables.generatedDensities = []
 	}
 
+	signingConfigs {
+		if (keystorePropertiesFile.exists()) {
+			release {
+				storeFile = file(keystoreProperties['storeFile'])
+				storePassword = keystoreProperties['storePassword']
+				keyAlias = keystoreProperties['keyAlias']
+				keyPassword = keystoreProperties['keyPassword']
+			}
+		}
+	}
+
 	buildTypes {
 		debug {
 			buildConfigField 'String', 'VERSION_FULL', "\"${getVersionString('debug')}\""
@@ -189,6 +216,7 @@ android {
 			minifyEnabled = true
 			shrinkResources = true
 			proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+			signingConfig = keystorePropertiesFile.exists() ? signingConfigs.release : signingConfigs.debug
 		}
 	}
 	compileOptions {

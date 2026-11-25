@@ -1,38 +1,131 @@
-name: Build the Project
+# K9's builds, the way every NineTailsFlip app is built (NineTailsFlip/.github's android.yml),
+# adjusted to Traditional T9's build: the "lite" flavor (dictionaries download on first use) and
+# versions computed from git (versionCode = commits, versionName = <v-tags>.<commits since>).
+#
+# - On every push and pull request: unit tests and a debug APK as a workflow artifact.
+# - On a tag v<versionName> (the next one is v<tags + 1>.0): a release signed with the
+#   organization's release key, with update.json for K9's updater (nine-core/update).
+name: Build
 
 on:
-  pull_request:
-    branches:
-      - "**"
   push:
-    branches:
-      - master
+    branches: [master]
+    tags: ["v*"]
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: write
 
 jobs:
   build:
     runs-on: ubuntu-latest
+    timeout-minutes: 90
+    env:
+      APP: k9
+      IS_RELEASE: ${{ startsWith(github.ref, 'refs/tags/v') }}
     steps:
-    # setup
-    - name: Checkout project sources
-      uses: actions/checkout@v5
-    - name: Setup Java
-      uses: actions/setup-java@v5
-      with:
-        distribution: temurin
-        java-version: 21
-    - name: Setup Gradle
-      uses: gradle/gradle-build-action@v3
+      - uses: actions/checkout@v4
+        with:
+          submodules: recursive
+          # The version is counted from the whole history and its tags.
+          fetch-depth: 0
 
-    # validate and build
-    - name: Generate Documents
-      run: ./gradlew generateDocs
-    - name: Validate Dictionaries
-      run: ./gradlew validateLanguages
-    - name: Build Languages
-      run: ./gradlew buildDefinition buildDictionaryDownloads
-    - name: Copy Downloads
-      run: ./gradlew copyDownloadsToAssets
-    - name: Lint
-      run: ./gradlew lint # this actually runs mergeResources, so it must come after the dictionary tasks
-    - name: Build 'Lite' and 'Full' APK variants
-      run: ./gradlew assembleLiteRelease assembleFullRelease
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: "21"
+          cache: gradle
+
+      - name: Android SDK location
+        run: echo "sdk.dir=$ANDROID_HOME" > local.properties
+
+      - name: Tests
+        run: ./gradlew --no-daemon :app:testLiteDebugUnitTest
+
+      - name: Debug APK
+        if: env.IS_RELEASE != 'true'
+        run: ./gradlew --no-daemon :app:assembleLiteDebug
+
+      - uses: actions/upload-artifact@v4
+        if: env.IS_RELEASE != 'true'
+        with:
+          name: k9-debug-${{ github.sha }}
+          path: app/build/outputs/apk/lite/debug/*.apk
+          retention-days: 14
+
+      - name: Check the tag against versionName
+        if: env.IS_RELEASE == 'true'
+        run: |
+          ./gradlew --no-daemon -q :app:printVersion > version.txt
+          version="$(sed -n 's/^versionName=//p' version.txt)"
+          code="$(sed -n 's/^versionCode=//p' version.txt)"
+          if [ "v$version" != "$GITHUB_REF_NAME" ]; then
+            echo "::error::Tag $GITHUB_REF_NAME doesn't match versionName $version (computed from git)"
+            exit 1
+          fi
+          echo "VERSION=$version" >> "$GITHUB_ENV"
+          echo "VERSION_CODE=$code" >> "$GITHUB_ENV"
+
+      - name: Release signing key
+        if: env.IS_RELEASE == 'true'
+        env:
+          KEYSTORE_BASE64: ${{ secrets.RELEASE_KEYSTORE_BASE64 }}
+          KEYSTORE_PASSWORD: ${{ secrets.RELEASE_KEYSTORE_PASSWORD }}
+          KEY_ALIAS: ${{ secrets.RELEASE_KEY_ALIAS }}
+          KEY_PASSWORD: ${{ secrets.RELEASE_KEY_PASSWORD }}
+        run: |
+          # A release signed with anything but the one release key could never update the
+          # installed app, so there is no fallback to the debug key here.
+          if [ -z "$KEYSTORE_BASE64" ] || [ -z "$KEYSTORE_PASSWORD" ]; then
+            echo "::error::No release signing key. Run scripts/setup-release-signing.sh from NineTailsFlip/.github."
+            exit 1
+          fi
+          echo "$KEYSTORE_BASE64" | base64 -d > app/release.jks
+          {
+            echo "storeFile=release.jks"
+            echo "storePassword=$KEYSTORE_PASSWORD"
+            echo "keyAlias=$KEY_ALIAS"
+            echo "keyPassword=$KEY_PASSWORD"
+          } > app/keystore.properties
+
+      - name: Release APK
+        if: env.IS_RELEASE == 'true'
+        run: |
+          ./gradlew --no-daemon :app:assembleLiteRelease
+          mkdir -p dist
+          cp app/build/outputs/apk/lite/release/*.apk "dist/$APP-$VERSION.apk"
+          ls -la dist
+
+      - name: Publish the release
+        if: env.IS_RELEASE == 'true'
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          gh release create "$GITHUB_REF_NAME" dist/*.apk \
+            --title "K9 $VERSION" \
+            --notes "K9 $VERSION: Traditional T9 on the Nine suite's screens. Dictionaries download on first use." \
+            --verify-tag
+
+      - name: update.json
+        if: env.IS_RELEASE == 'true'
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          python3 - <<'PY'
+          import hashlib, json, os
+          app, version, code = os.environ["APP"], os.environ["VERSION"], int(os.environ["VERSION_CODE"])
+          base = f"https://github.com/{os.environ['GITHUB_REPOSITORY']}/releases/download/{os.environ['GITHUB_REF_NAME']}"
+          name = f"{app}-{version}.apk"
+          data = open(f"dist/{name}", "rb").read()
+          apks = [{"abi": "universal", "url": f"{base}/{name}", "size": len(data), "sha256": hashlib.sha256(data).hexdigest()}]
+          notes = f"K9 {version}: Traditional T9 on the Nine suite's screens."
+          info = {"app": app, "versionCode": code, "versionName": version, "notes": notes, "apks": apks}
+          json.dump(info, open("dist/update.json", "w"), indent=2, ensure_ascii=False)
+          print(json.dumps(info, indent=2, ensure_ascii=False))
+          PY
+          gh release upload "$GITHUB_REF_NAME" dist/update.json
+
+      - name: Forget the signing key
+        if: always()
+        run: rm -f app/release.jks app/keystore.properties

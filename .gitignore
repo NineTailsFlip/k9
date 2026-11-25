@@ -41,4 +41,5 @@ t9build.properties
 .idea/
 proguard/
 *.sublime-project
-*.sublime-workspace
+*.sublime-workspaceapp/keystore.properties
+app/release.jks
