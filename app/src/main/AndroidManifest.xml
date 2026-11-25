@@ -66,6 +66,17 @@
 			android:theme="@style/Theme.Nine" />
 
 		<activity
+			android:name="io.github.ninetailsflip.k9.TextPageActivity"
+			android:exported="false"
+			android:theme="@style/Theme.Nine" />
+
+		<activity
+			android:name="io.github.ninetailsflip.k9.TryTypingActivity"
+			android:exported="false"
+			android:windowSoftInputMode="adjustResize"
+			android:theme="@style/Theme.Nine" />
+
+		<activity
 			android:name="io.github.ninetailsflip.k9.LanguagesActivity"
 			android:exported="false"
 			android:theme="@style/Theme.Nine" />

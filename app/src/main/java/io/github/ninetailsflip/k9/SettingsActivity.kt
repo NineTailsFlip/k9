@@ -129,8 +129,8 @@ class SettingsActivity : NineSettingsActivity() {
         }
         diagnosticsSection(screen)
         screen.section("Help") {
-            action("Manual") { startActivity(Intent().setClassName(this@SettingsActivity, "io.github.sspanak.tt9.preferences.HelpActivity")) }
-            action("Privacy policy") { startActivity(Intent().setClassName(this@SettingsActivity, "io.github.sspanak.tt9.preferences.PrivacyPolicyActivity")) }
+            action("Manual") { startActivity(TextPageActivity.intentFor(this@SettingsActivity, TextPageActivity.Page.MANUAL)) }
+            action("Privacy policy") { startActivity(TextPageActivity.intentFor(this@SettingsActivity, TextPageActivity.Page.PRIVACY)) }
         }
         updatesSection(screen, this, ::refresh)
     }
@@ -186,8 +186,8 @@ class SettingsActivity : NineSettingsActivity() {
             exporter.setFailureHandler { setStatus(exportLabel, "export failed") }
             if (!exporter.run(this@SettingsActivity)) setStatus(exportLabel, "already exporting")
         }
-        action("View logs") { startActivity(Intent().setClassName(this@SettingsActivity, "io.github.sspanak.tt9.preferences.LogsActivity")) }
-        action("Try typing") { startActivity(Intent().setClassName(this@SettingsActivity, "io.github.sspanak.tt9.preferences.screens.debug.TestInputActivity")) }
+        action("View logs") { startActivity(TextPageActivity.intentFor(this@SettingsActivity, TextPageActivity.Page.LOGS)) }
+        action("Try typing") { startActivity(Intent(this@SettingsActivity, TryTypingActivity::class.java)) }
         val deviceLabel = "Copy device info"
         action(deviceLabel, value = { statuses[deviceLabel].orEmpty() }) {
             getSystemService(ClipboardManager::class.java).setPrimaryClip(ClipData.newPlainText("K9 device info", DeviceInfo().toString()))
