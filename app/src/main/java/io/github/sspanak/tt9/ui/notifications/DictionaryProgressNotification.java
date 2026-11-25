@@ -35,9 +35,8 @@ public class DictionaryProgressNotification extends DictionaryNotification {
 
 	@Override
 	protected final PendingIntent createNavigationIntent(@NonNull Context context, @Nullable Language language) {
-		Intent intent = new Intent(context, PreferencesActivity.class);
-		intent.putExtra("screen", LanguagesScreen.NAME);
-		intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+		// K9: its own Languages screen.
+		Intent intent = io.github.ninetailsflip.k9.K9Screens.intentFor(context, LanguagesScreen.NAME);
 		return PendingIntent.getActivity(context, 0, intent,PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_IMMUTABLE);
 	}
 

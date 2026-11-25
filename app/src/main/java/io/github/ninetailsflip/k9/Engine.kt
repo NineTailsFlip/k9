@@ -12,7 +12,13 @@ import life.furrer.nine.core.util.Async
 object Engine {
     @Volatile private var ready = false
 
-    fun settings(context: Context): SettingsStore = SettingsStore(context)
+    /** Many of Traditional T9's settings fall back to the language list (the default language,
+     *  "more than two languages on"), so it's loaded first - on the calling thread, as Traditional
+     *  T9's own settings screen did: it's a list of definitions, not the word database. */
+    fun settings(context: Context): SettingsStore {
+        LanguageCollection.init(context.applicationContext)
+        return SettingsStore(context)
+    }
 
     /** [onReady] runs on the main thread, right away when the engine is already up. */
     fun whenReady(context: Context, onReady: () -> Unit) {

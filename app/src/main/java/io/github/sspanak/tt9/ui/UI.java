@@ -49,11 +49,8 @@ public class UI {
 
 
 	public static void showSettingsScreen(@NonNull Context context, @Nullable String screenName) {
-		Intent prefIntent = new Intent(context, PreferencesActivity.class);
-		prefIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-		prefIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
-		prefIntent.putExtra("screen", screenName);
-		context.startActivity(prefIntent);
+		// K9: its own Nine screens, not Traditional T9's PreferencesActivity.
+		context.startActivity(io.github.ninetailsflip.k9.K9Screens.intentFor(context, screenName));
 	}
 
 

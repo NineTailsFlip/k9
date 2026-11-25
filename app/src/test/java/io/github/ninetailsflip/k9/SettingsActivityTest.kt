@@ -40,7 +40,10 @@ class SettingsActivityTest {
     fun `K9's sections come first, then the Nine suite's own`() {
         val headers = rows(buildActivity()).map { it.text.toString() }.filter(::isSectionHeader)
         assertEquals(
-            listOf("KEYBOARD", "KEYS", "PREDICTIVE MODE (T9)", "ABC MODE", "TYPING", "MIND READING", "COMPATIBILITY", "MORE", "UPDATES", "THEME", "BACKUP", "ABOUT"),
+            listOf(
+                "KEYBOARD", "KEYS", "PREDICTIVE MODE (T9)", "ABC MODE", "TYPING", "MIND READING", "COMPATIBILITY",
+                "ON-SCREEN KEYPAD", "DIAGNOSTICS", "HELP", "UPDATES", "THEME", "BACKUP", "ABOUT",
+            ),
             headers,
         )
     }
@@ -60,5 +63,43 @@ class SettingsActivityTest {
 
         assertFalse(SettingsStore(context).predictiveMode)
         assertTrue(rows(activity).any { it.text.startsWith("Predictive mode") && it.text.endsWith("off") })
+    }
+
+    private fun select(activity: SettingsActivity, label: String) {
+        val selectable = rows(activity).filterNot { isSectionHeader(it.text) }
+        val index = selectable.indexOfFirst { it.text.startsWith(label) }
+        assertTrue("$label row is there", index >= 0)
+        repeat(index) { press(activity, KeyEvent.KEYCODE_DPAD_DOWN) }
+    }
+
+    private fun rowText(activity: SettingsActivity, label: String) =
+        rows(activity).first { it.text.startsWith(label) }.text.toString()
+
+    @Test
+    fun `a drop-down offers Traditional T9's own options and writes its key`() {
+        PreferenceManager.getDefaultSharedPreferences(context).edit().clear().commit()
+        val activity = buildActivity()
+        select(activity, "0 pressed twice")
+        val before = SettingsStore(context).doubleZeroChar
+        press(activity, KeyEvent.KEYCODE_DPAD_RIGHT)
+        val after = SettingsStore(context).doubleZeroChar
+        assertTrue("the engine reads a new value ($before -> $after)", before != after)
+        assertFalse(rowText(activity, "0 pressed twice").endsWith(": "))
+    }
+
+    @Test
+    fun `forgetting word pairs takes a second OK, and moving away takes the first back`() {
+        val activity = buildActivity()
+        select(activity, "Forget learned word pairs")
+        press(activity, KeyEvent.KEYCODE_DPAD_CENTER)
+        assertTrue(rowText(activity, "Forget learned word pairs").endsWith("OK again to confirm"))
+        press(activity, KeyEvent.KEYCODE_DPAD_DOWN)
+        press(activity, KeyEvent.KEYCODE_DPAD_UP)
+        assertFalse(rowText(activity, "Forget learned word pairs").endsWith("OK again to confirm"))
+    }
+
+    @Test
+    fun `the old Traditional T9 settings are not linked any more`() {
+        assertFalse(rows(buildActivity()).any { it.text.contains("and the rest") })
     }
 }
